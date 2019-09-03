@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="4dp"
             android:layout_below="@+id/tv_movie_title"
             android:layout_toEndOf="@+id/img_movie"
             android:text="导演:"
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="4dp"
             android:layout_below="@+id/tv_directors"
             android:layout_toEndOf="@+id/img_movie"
             android:text="演员:"
@@ -102,24 +102,21 @@
             android:textSize="16sp" />
 
         <TextView
-            android:layout_marginTop="3dp"
+
             android:id="@+id/tv_pubdates"
+            android:layout_below="@id/tv_casts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_alignParentBottom="true"
-
             android:layout_toEndOf="@id/img_movie"
-            android:paddingBottom="3dp"
             android:text="上映日期:"
             android:textSize="16sp" />
 
         <TextView
-            android:paddingBottom="3dp"
             android:id="@+id/tv_movie_pubdates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@id/tv_pubdates"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@id/tv_pubdates"
             android:text="2016年12月21日"

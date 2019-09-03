@@ -6,8 +6,10 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by nancy on 17-10-15.
@@ -18,6 +20,7 @@ public class OtherOperator {
     public static void operatorOne(){
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override public void subscribe(ObservableEmitter emitter) throws Exception {
+               // Log.d(TAG,"Observable work thread is"+Thread.currentThread().getName());
                 Log.d(TAG, "emit 1");
                 emitter.onNext(1);
                 Log.d(TAG, "emit 2");
@@ -28,6 +31,9 @@ public class OtherOperator {
                 emitter.onNext(4);
                 Log.d(TAG, "emit complete");
                 emitter.onComplete();
+
+
+
                }
          }).subscribe(new Observer<Integer>() {
                     private Disposable mDisposable;
@@ -35,6 +41,7 @@ public class OtherOperator {
                         mDisposable = d;
                         Log.d(TAG, "subscribe"); }
                     @Override public void onNext(Integer value) {
+                       // Log.d(TAG,"Observe work thread is"+Thread.currentThread().getName());
                         Log.d(TAG, "receive " + value);
                         if(value == 3){
                             mDisposable.dispose();
@@ -65,7 +72,6 @@ public class OtherOperator {
                 emitter.onNext("C");
                 Log.d(TAG, "emit complete2");
                 emitter.onComplete(); } });
-
         Observable.zip(observable1, observable2, new BiFunction<Integer, String, String>() {
             @Override public String apply(Integer integer, String s) throws Exception {
                 return integer + s; } })

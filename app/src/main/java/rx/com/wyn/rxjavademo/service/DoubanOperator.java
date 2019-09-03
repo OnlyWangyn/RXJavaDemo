@@ -1,9 +1,11 @@
 package rx.com.wyn.rxjavademo.service;
 
 import android.content.Context;
+import android.graphics.Movie;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -17,6 +19,8 @@ import io.reactivex.schedulers.Schedulers;
 import rx.com.wyn.rxjavademo.model.BookInfo;
 import rx.com.wyn.rxjavademo.model.MovieInfo;
 import rx.com.wyn.rxjavademo.model.Subject;
+import rx.com.wyn.rxjavademo.model.Subjects;
+import rx.com.wyn.rxjavademo.model.USbox;
 import rx.com.wyn.rxjavademo.service.interfaces.IBookService;
 import rx.com.wyn.rxjavademo.service.interfaces.IMovieService;
 
@@ -29,7 +33,6 @@ public class DoubanOperator {
 
     //https://api.douban.com/v2/movie/top250?start=0&count=15
     private static final String MOVIE_ENDPOINT = "https://api.douban.com/" ;//movie url
-    //https://api.douban.com/v2/book/gettopbooks/start/0/num/10
     private static final String BOOK_ENDPOINT = "https://api.douban.com/v2/book/";
     /**
      * 用于获取豆瓣电影Top250的数据
@@ -69,6 +72,38 @@ public class DoubanOperator {
                 }
             });
     }
+    public static void getTopMovie250(){
+        IMovieService movieService = RetrofitProvider.get(MOVIE_ENDPOINT).create(IMovieService.class);
+        movieService.getMovie(0,20)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MovieInfo>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieInfo value) {
+                        Log.d("c2","result size:"+value.getSubjects().size());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+    /**
+     * 用于获取豆瓣电影Top250的数据
+     * @param start 起始位置
+     * @param count 获取长度
+     */
     public static void getTopMovie250(Observer<List<Subject>> observer, int start, int count){
         IMovieService movieService = RetrofitProvider.get(MOVIE_ENDPOINT).create(IMovieService.class);
         movieService.getMovie(start,count)
@@ -100,6 +135,21 @@ public class DoubanOperator {
                 Toast.makeText(context,str,Toast.LENGTH_LONG).show();
             }
         });
+    }
+    public static void getUSBox(Observer<List<Subject>> observer){
+        IMovieService movieService =RetrofitProvider.get(MOVIE_ENDPOINT).create(IMovieService.class);
+        movieService.getUSBox().map(new Function<USbox, List<Subject>>() {
+            @Override
+            public List<Subject> apply(USbox uSbox) throws Exception {
+                List<Subject> list = new ArrayList<Subject>();
+                for(Subjects ss:uSbox.getSubjects()){
+                    list.add(ss.getSubject());
+                }
+                return list;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(observer);
     }
 }
 
